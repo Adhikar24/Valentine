@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💖</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Main container */
+.container {
+  z-index: 5;
+  padding: 20px;
+}
+
+h1 {
+  color: #fff;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  margin-bottom: 25px;
+}
+
+/* Buttons */
+button {
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+#yesBtn {
+  background: #ff2d55;
+  color: white;
+}
+
+#noBtn {
+  background: white;
+  color: #ff2d55;
+  position: absolute;
+  transition: transform 0.15s ease;
+}
+
+/* Message */
+#message {
+  display: none;
+  margin-top: 25px;
+  font-size: 1.8rem;
+  color: white;
+}
+
+/* Floating hearts */
+.heart {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  background: red;
+  transform: rotate(-45deg);
+  animation: float linear infinite;
+  opacity: 0.9;
+}
+
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  background: red;
+  border-radius: 50%;
+}
+
+.heart::before {
+  top: -18px;
+  left: 0;
+}
+
+.heart::after {
+  left: 18px;
+  top: 0;
+}
+
+@keyframes float {
+  from {
+    transform: translateY(110vh) rotate(-45deg);
+  }
+  to {
+    transform: translateY(-120px) rotate(-45deg);
+  }
+}
+
+/* Touch cursor */
+.cursor {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+}
+</style>
+</head>
+
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<div class="container">
+  <h1>Will you be my Valentine? 💘</h1>
+  <button id="yesBtn">Yes</button>
+  <button id="noBtn">No</button>
+  <div id="message">I knew you would say yes 💖</div>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const message = document.getElementById("message");
+const cursor = document.getElementById("cursor");
+
+let noScale = 1;
+
+/* Move & shrink NO button */
+function escapeNo() {
+  const padding = 70;
+  const x = Math.random() * (window.innerWidth - padding);
+  const y = Math.random() * (window.innerHeight - padding);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
+  noScale -= 0.08;
+  noBtn.style.transform = `scale(${Math.max(noScale, 0.4)})`;
+
+  if (navigator.vibrate) navigator.vibrate(50);
+}
+
+noBtn.addEventListener("mouseover", escapeNo);
+noBtn.addEventListener("touchstart", escapeNo);
+
+/* YES click */
+yesBtn.addEventListener("click", () => {
+  message.style.display = "block";
+  yesBtn.style.display = "none";
+  noBtn.style.display = "none";
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+});
+
+/* Cursor follow */
+document.addEventListener("mousemove", e => {
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
+});
+
+document.addEventListener("touchmove", e => {
+  const t = e.touches[0];
+  cursor.style.left = t.clientX + "px";
+  cursor.style.top = t.clientY + "px";
+});
+
+/* Generate floating hearts */
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 8000);
+}
+
+setInterval(createHeart, 500);
+</script>
+
+</body>
+</html>
